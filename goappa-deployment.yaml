@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goappa
+  namespace: default
+  labels:
+    app: goappa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: goappa
+  template:
+    metadata:
+      labels:
+        app: goappa
+    spec:
+      containers:
+      - name: goappa
+        image: goappa:1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8080
+        env:
+        - name: PORT
+          value: "8080"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: goappa-service
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: goappa

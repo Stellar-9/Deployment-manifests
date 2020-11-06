@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goappb
+  namespace: default
+  labels:
+    app: goappb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: goappb
+  template:
+    metadata:
+      labels:
+        app: goappb
+    spec:
+      containers:
+      - name: goappb
+        image: goappb:1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 9091
+        env:
+        - name: URL
+          value: "http://goappa-service:8080?name=World"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: goappb-service
+spec:
+  ports:
+  - name: http
+    port: 9091
+    targetPort: 9091
+    protocol: TCP
+  selector:
+    app: goappb
